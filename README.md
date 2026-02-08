@@ -20,6 +20,14 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Alien Mini App – Auth & Payments
+
+- **Auth**: The app uses the [Alien React SDK](https://docs.alien.org/react-sdk) (`@alien_org/react`). Users must open the app inside the Alien app to vote or submit proposals. The backend verifies JWTs with `@alien_org/auth-client` (JWKS from Alien).
+- **Payments**: Contributions use the SDK’s `usePayment` hook. Configure:
+  - **Treasury recipient (ALIEN)**: `TREASURY_ALIEN_PROVIDER_ADDRESS` — your Alien provider address from the [Developer Portal](https://docs.alien.org).
+  - **Treasury recipient (USDC/SOL on Solana)**: `TREASURY_SOLANA_ADDRESS` — your Solana wallet address.
+  - **Webhook**: Register a payment webhook in the Alien Dev Portal and set `WEBHOOK_PUBLIC_KEY` (Ed25519 public key, hex) to verify webhook signatures.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
