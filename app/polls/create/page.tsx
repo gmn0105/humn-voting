@@ -334,13 +334,32 @@ export default function CreatePollPage() {
                 <label htmlFor="endTime" className="block text-sm font-medium text-slate-700">
                   End time (optional)
                 </label>
-                <input
-                  id="endTime"
-                  type="datetime-local"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
-                />
+                <div className="mt-1 flex min-w-0 items-center gap-2 rounded-lg border border-slate-300 bg-white focus-within:ring-1 focus-within:ring-slate-900 focus-within:border-slate-900">
+                  <label
+                    htmlFor="endTime"
+                    className="flex shrink-0 cursor-pointer items-center gap-2 px-3 py-2.5 text-slate-500"
+                    aria-hidden
+                  >
+                    <span className="text-lg" aria-hidden>📅</span>
+                  </label>
+                  <input
+                    id="endTime"
+                    type="datetime-local"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    className="min-w-0 flex-1 border-0 bg-transparent py-2.5 pr-2 text-slate-900 outline-none [color-scheme:light]"
+                  />
+                  {endTime ? (
+                    <button
+                      type="button"
+                      onClick={() => setEndTime("")}
+                      className="shrink-0 px-3 py-2.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-r-md"
+                      aria-label="Clear end time"
+                    >
+                      Clear
+                    </button>
+                  ) : null}
+                </div>
               </div>
             </>
           )}
