@@ -115,6 +115,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    return await handlePost(req);
+  } catch (_e) {
+    return NextResponse.json({ error: "Something went wrong. Try again." }, { status: 500 });
+  }
+}
+
+async function handlePost(req: Request) {
+  try {
     const { alienId } = await verifyRequest(req);
     const body = await req.json();
 
@@ -236,8 +244,12 @@ export async function POST(req: Request) {
 
     return NextResponse.json(poll);
   } catch (e) {
-    if (e instanceof Error && e.message.includes("authorization")) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg.includes("authorization") || msg.includes("token") || msg.includes("Missing")) {
       return NextResponse.json({ error: "Missing or invalid authorization" }, { status: 401 });
+    }
+    if (msg.includes("fetch failed") || msg.includes("ECONNREFUSED") || msg.includes("ETIMEDOUT") || msg.includes("network")) {
+      return NextResponse.json({ error: "Auth service temporarily unavailable. Try again." }, { status: 503 });
     }
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
