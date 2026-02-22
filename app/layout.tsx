@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Human Treasury",
-  description: "One Human. One Vote.",
+  title: "HUMN",
+  description: "One Human. One Voice.",
 };
 
 export default function RootLayout({

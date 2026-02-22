@@ -3,78 +3,90 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAlien } from "@alien_org/react";
-import TreasuryCard from "@/components/TreasuryCard";
-import ContributeButton from "@/components/ContributeButton";
-import ProposalCard, { type Proposal } from "@/components/ProposalCard";
+import PollCard, { type PollListItem } from "@/components/PollCard";
+
+type Tab = "assigned" | "created" | "completed";
 
 export default function Home() {
   const { authToken, isBridgeAvailable } = useAlien();
-  const [proposals, setProposals] = useState<Proposal[]>([]);
+  const [tab, setTab] = useState<Tab>("assigned");
+  const [polls, setPolls] = useState<PollListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function fetchProposals() {
+  async function fetchPolls() {
+    setLoading(true);
     try {
-      const res = await fetch("/api/proposals");
+      const url = `/api/polls?tab=${tab}`;
+      const res = await fetch(url, {
+        headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
+      });
       if (res.ok) {
         const data = await res.json();
-        setProposals(Array.isArray(data) ? data : []);
+        setPolls(Array.isArray(data) ? data : []);
+      } else {
+        setPolls([]);
       }
     } catch {
-      setProposals([]);
+      setPolls([]);
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchProposals();
-  }, []);
+    fetchPolls();
+  }, [tab]);
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] text-[#fafafa]">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6">
         <header className="mb-10">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-            Human Treasury
+            HUMN
           </h1>
-          <p className="mt-2 text-xl text-zinc-400 sm:text-2xl">
-            One Human. One Vote.
+          <p className="mt-2 text-xl text-slate-600 sm:text-2xl">
+            One Human. One Voice.
           </p>
+          <Link
+            href="/polls/create"
+            className="mt-6 inline-block rounded-lg bg-[var(--accent)] px-5 py-2.5 text-base font-medium text-white hover:bg-[var(--accent-hover)]"
+          >
+            Create Poll
+          </Link>
         </header>
 
-        <section className="mb-10">
-          <TreasuryCard
-            totalPool="500 ALIEN"
-            timeLeft="02:14:23"
-            verifiedHumans={37}
-          />
-          <ContributeButton />
-        </section>
+        <nav className="mb-6 flex gap-2 border-b border-slate-200">
+          {(["assigned", "created", "completed"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={`border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+                tab === t
+                  ? "border-slate-900 text-slate-900"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              {t === "assigned" ? "Assigned" : t === "created" ? "Created" : "Completed"}
+            </button>
+          ))}
+        </nav>
 
         <section>
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-semibold sm:text-3xl">
-              Proposals
-            </h2>
-            <Link
-              href="/submit"
-              className="rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-[#0c0c0c] sm:text-base"
-            >
-              Submit
-            </Link>
-          </div>
-
           {loading ? (
-            <p className="text-zinc-500">Loading proposals…</p>
-          ) : proposals.length === 0 ? (
-            <p className="text-zinc-500">No proposals yet.</p>
+            <p className="text-slate-500">Loading…</p>
+          ) : polls.length === 0 ? (
+            <p className="text-slate-500">
+              {tab === "assigned" && "No polls assigned to you."}
+              {tab === "created" && "You haven’t created any polls yet."}
+              {tab === "completed" && "No completed polls yet."}
+            </p>
           ) : (
             <ul className="flex flex-col gap-4">
-              {proposals.map((p) => (
+              {polls.map((p) => (
                 <li key={p.id}>
-                  <ProposalCard
-                    proposal={p}
-                    onVoted={fetchProposals}
+                  <PollCard
+                    poll={p}
                     authToken={authToken}
                     isBridgeAvailable={isBridgeAvailable}
                   />

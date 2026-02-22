@@ -10,7 +10,7 @@ export type Proposal = {
   vote_count: number;
 };
 
-const VOTED_KEY = "human-treasury-voted";
+const VOTED_KEY = "humn-voted";
 
 function getVotedIds(): string[] {
   if (typeof window === "undefined") return [];

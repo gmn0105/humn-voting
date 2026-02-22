@@ -61,7 +61,7 @@ export default function ContributeButton() {
         network,
         invoice,
         item: {
-          title: "Human Treasury — Contribution",
+          title: "HUMN — Contribution",
           iconUrl: "/window.svg",
           quantity: 1,
         },
