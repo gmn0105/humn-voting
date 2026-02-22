@@ -94,8 +94,10 @@ export default function CreatePollPage() {
           }))
         : validOptions.map((o) => o.text.trim());
 
+    const apiUrl = typeof window !== "undefined" ? `${window.location.origin}/api/polls` : "/api/polls";
+
     try {
-      const res = await fetch("/api/polls", {
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -127,8 +129,13 @@ export default function CreatePollPage() {
       }
       const poll = await res.json();
       router.push(`/polls/${poll.id}`);
-    } catch {
-      setError("Something went wrong.");
+    } catch (e) {
+      const err = e instanceof Error ? e : new Error(String(e));
+      setError(
+        err.message && (err.message.includes("fetch") || err.message.includes("Failed to fetch") || err.message.includes("network"))
+          ? "Network error or request timed out. Try again, or open the app inside Alien."
+          : "Something went wrong."
+      );
       setLoading(false);
     }
   }

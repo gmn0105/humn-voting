@@ -36,10 +36,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 |----------|--------|---------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API | Polls, votes, auth |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same as above | Polls, votes, auth |
-| `GEMINI_API_KEY` | [Google AI](https://aistudio.google.com/apikey) | Optional: `/api/summary` (AI summarization; not used in this version). |
-| `TREASURY_ALIEN_PROVIDER_ADDRESS` | Alien Developer Portal | Optional: only if you want to **accept** user contributions (Contribute flow). |
-| `TREASURY_SOLANA_ADDRESS` | Solana wallet | Optional: same, for SOL/USDC contributions. |
-| `WEBHOOK_PUBLIC_KEY` | Alien payment webhook (hex) | Optional: verify payment webhooks if using contributions. |
 
 **No wallet required for the app operator.** Voting and creating polls only need Supabase (+ Alien in-app). For **capital polls**, the **poll creator** (or sponsor) sends the prize by tapping **"Send prize"** in the app after the poll closes; they approve the payment in Alien and their wallet sends to the winner. Each option has a recipient and amount; the winning option’s amount is sent when the creator completes the payment.
 
