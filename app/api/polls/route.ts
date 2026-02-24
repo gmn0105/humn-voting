@@ -179,6 +179,21 @@ async function handlePost(req: Request) {
       );
     }
 
+    let endTimeValue: string | null = null;
+    if (end_time && end_time.trim()) {
+      const endDate = new Date(end_time.trim());
+      if (Number.isNaN(endDate.getTime())) {
+        return NextResponse.json({ error: "Invalid end time format" }, { status: 400 });
+      }
+      if (endDate.getTime() <= Date.now()) {
+        return NextResponse.json(
+          { error: "End time must be in the future" },
+          { status: 400 },
+        );
+      }
+      endTimeValue = endDate.toISOString();
+    }
+
     const pollInsert = {
       title: title.trim(),
       description: description?.trim() || null,
@@ -187,7 +202,7 @@ async function handlePost(req: Request) {
       audience_type,
       vote_identity_mode: vote_identity_mode ?? "anonymous",
       result_visibility_mode,
-      end_time: end_time && end_time.trim() ? end_time : null,
+      end_time: endTimeValue,
       status: "active" as const,
     };
 
