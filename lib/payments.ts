@@ -52,3 +52,8 @@ export function setPaymentIntentStatus(
     (intent as PaymentIntent & { txHash?: string }).txHash = txHash;
   }
 }
+
+/** Reset in-memory store (for tests only). */
+export function resetPaymentStore(): void {
+  store.clear();
+}
